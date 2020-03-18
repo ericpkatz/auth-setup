@@ -6,7 +6,7 @@ const root = document.querySelector('#root');
 
 
 const App = ()=> {
-  const [auth, setAuth] = useState({});
+  const [auth, setAuth] = useState({ id: 123});
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -18,7 +18,10 @@ const App = ()=> {
       username,
       password
     };
-    console.log(credentials);
+  };
+
+  const logout = ()=> {
+    setAuth({});
   };
 
   return (
