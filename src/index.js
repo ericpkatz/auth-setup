@@ -6,7 +6,7 @@ const root = document.querySelector('#root');
 
 
 const App = ()=> {
-  const [auth, setAuth] = useState({ id: 123});
+  const [auth, setAuth] = useState({ });
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -18,9 +18,32 @@ const App = ()=> {
       username,
       password
     };
+    axios.post('/api/auth', credentials)
+      .then( response => {
+        window.localStorage.setItem('token', response.data.token);
+        attemptLoginFromToken();
+      })
+      .catch( ex => setError(ex.response.data.message));
+  };
+
+  useEffect(()=> attemptLoginFromToken(), []);
+
+  const attemptLoginFromToken = ()=> {
+    const token = window.localStorage.getItem('token');
+    if(!token){
+      return;
+    }
+    axios.get('/api/auth', {
+      headers: {
+        authentication: token
+      }
+    })
+    .then(response => setAuth(response.data));
+
   };
 
   const logout = ()=> {
+    window.localStorage.removeItem('token');
     setAuth({});
   };
 
